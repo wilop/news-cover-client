@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import Home from './pages/Home';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import Matchs from './pages/Matchs';
+import Standings from './pages/Standings'
+import Teams from './pages/Teams';
+import NoPage from './pages/NoPage';
+
+import Navigator from './components/Navigator';
+import RequireAuth from './components/RequireAuth';
+import {AuthProvider} from './hooks/useAuth';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+    <BrowserRouter>
+      <AuthProvider>
+        <Navigator />
+        <Routes>
+          <Route index path='/login' element={<Login />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='*' element={<NoPage />} />
+          <Route index path='/' element={<RequireAuth><Teams /></RequireAuth>} />
+          <Route path='/teams' element={<RequireAuth><Teams /></RequireAuth>} />
+          <Route path='/matchs' element={<RequireAuth><Matchs /></RequireAuth>} />
+          <Route path='/standings' element={<RequireAuth><Standings /></RequireAuth>} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+
   );
 }
 

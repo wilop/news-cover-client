@@ -31,8 +31,8 @@ To install additional dependencies just run `npm install` __package__ in your te
 ## WorkTree 
 Add directories and a short description here.
 
-> **public:**
-This directory contains resources like icons and logos
+> **public:**  
+This directory contains resources like icons and logos.
 
 > **src/components:**  
 This directory contains components for rendering in pages.
