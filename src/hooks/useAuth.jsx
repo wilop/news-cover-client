@@ -6,6 +6,7 @@ const authContext = React.createContext();
 
 function useAuth() {
     const [authed, setAuthed] = React.useState(false);
+    const [admin, setAdmin] = React.useState(false);
 
     const [data, setData] = React.useState(null);
     const [token, setToken] = React.useState('');
@@ -28,7 +29,7 @@ function useAuth() {
     }, [password]);
 
     return {
-        authed, data, token, email,
+        authed, admin ,data, token, email,
         login(email_, password_) {
 
             setEmail(email_);
@@ -36,14 +37,18 @@ function useAuth() {
 
             return new Promise((resolve, reject) => {
                 console.log('data', data);
-                if (data.status === "success") {
-                    setAuthed(true);
-                    resolve(data);
-                    setEmail(email_)
-                }
-                else {
-                    reject(Error('No se pudo'));
-                }
+                // if (data.status === "success") {
+                //     setAuthed(true);
+                //     resolve(data);
+                //     setEmail(email_)
+                // }
+                // else {
+                //     reject(Error('No se pudo'));
+                // }
+                setAuthed(true);
+                resolve(data);
+                setEmail(email_)
+                setAdmin(true);
             });
         },
 

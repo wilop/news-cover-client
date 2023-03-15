@@ -1,9 +1,14 @@
 import 'bulma/css/bulma.min.css';
-import {Hero, Heading, Container } from 'react-bulma-components';
+import { Hero, Heading, Container } from 'react-bulma-components';
+
+import Header from '../components/Header';
 
 const NoPage = () => {
+
     return (
         <>
+            <Header title="Page Not Found" />
+
             <Hero color='warning' >
                 <Hero.Body >
                     <Container >

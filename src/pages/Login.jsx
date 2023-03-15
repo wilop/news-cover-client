@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-
-import useAuth from '../hooks/useAuth';
-
 import { Box, Button, Form, Notification } from 'react-bulma-components';
 import 'bulma/css/bulma.min.css';
+
+import Header from '../components/Header';
+import useAuth from '../hooks/useAuth';
 
 const Login = () => {
 
@@ -26,7 +26,7 @@ const Login = () => {
 
     login(email, password).then(() => {
       setRes('Goooolll!');
-      navigate(state?.path || "/teams");
+      navigate(state?.path || "/sources");
     }).catch(() => { setRes('Fault!') });
   }
 
@@ -60,6 +60,7 @@ const Login = () => {
 
   return (
     <div>
+      <Header title="User Login" />
       <br />
       <Box style={{ width: 400, margin: 'auto' }}>
         <form onSubmit={(e) => handleSubmit(e)}
