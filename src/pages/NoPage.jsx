@@ -1,5 +1,5 @@
-import 'bulma/css/bulma.min.css';
 import { Hero, Heading, Container } from 'react-bulma-components';
+import 'bulma/css/bulma.min.css';
 
 import Header from '../components/Header';
 

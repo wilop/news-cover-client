@@ -4,7 +4,7 @@ const SignUp = () => {
 
     return (
         <>
-                    <Header title="User Registration" />
+            <Header title="User Registration" />
 
         </>
     );

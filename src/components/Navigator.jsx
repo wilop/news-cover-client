@@ -43,8 +43,8 @@ function Navigator() {
                         </Navbar.Link>
                         <Navbar.Dropdown >
                             {authed && <Navbar.Item onClick={handleLogout}>Logout</Navbar.Item>}
-                            {!admin && <NavLink to="/sources">Sources</NavLink>}
-                            {admin && <NavLink to="/categories">Categories</NavLink>}
+                            {authed && !admin && <NavLink to="/sources">Sources</NavLink>}
+                            {authed && admin && <NavLink to="/categories">Categories</NavLink>}
 
                         </Navbar.Dropdown>
                     </Navbar.Item>
