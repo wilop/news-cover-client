@@ -1,17 +1,23 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { categories, editMode, editCategory, addCategory } from '../hooks/useCategory'
+import { Box, Form, Button } from 'react-bulma-components';
+import 'bulma/css/bulma.min.css';
+
+import useSource from '../hooks/useSource'
+import useCategory from '../hooks/useCategory'
 import Header from '../components/Header';
 
 const Source = () => {
-
+    const { source, editMode, editSource, addSource } = useSource();
+    const { categories } = useCategory();
     const navigate = useNavigate();
     const [edit] = useState(editMode);
-    const [name, setName] = useState(props.category);
-    const [category, setCategory] = useState(props.category);
-    const [rssUrl, setRssUrl] = useState(props.category);
-    const [color, setColor] = useState('grey');
-    const [list] = useState(categories);
+    const [name, setName] = useState('');
+    const [category, setCategory] = useState('');
+    const [rssUrl, setRssUrl] = useState('');
+    const [color, setColor] = useState('');
+    const [list, setList] = useState([]);
 
     const handleName = (event) => {
         let value = event.target.value;
@@ -46,9 +52,11 @@ const Source = () => {
         setCategory('');
         setRssUrl('');
     };
+
     return (
         <>
             <Header title='Sources' />
+
             <Box style={{ width: 400, margin: 'auto' }}>
                 <form onSubmit={(e) => handleSubmit(e)}
                     onReset={(e) => handleReset(e)}>
@@ -92,7 +100,7 @@ const Source = () => {
                     </Form.Field>
                     <Form.Field>
                         <Form.Control>
-                            <Button value="Save" color="primary" type="submit">Save</Button>
+                            <Button value="Save" color="dark" type="submit">Save</Button>
                         </Form.Control>
                     </Form.Field>
                 </form>

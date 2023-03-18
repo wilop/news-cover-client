@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
-import { Box, Form } from 'react-bulma-components';
+import { Box, Form, Button } from 'react-bulma-components';
 import 'bulma/css/bulma.min.css';
 
-import { category, editMode, editCategory, addCategory } from '../hooks/useCategory';
+import useCategory from '../hooks/useCategory';
 import Header from "../components/Header";
 
 const Category = (props) => {
-
+    const { category, editMode, editCategory, addCategory } = useCategory();
     const navigate = useNavigate();
     const [edit] = useState(editMode);
-    const [category_, setCategory_] = useState(category);
+    const [category_, setCategory_] = useState({});
     const [name, setName] = useState(category_.name);
     const [color, setColor] = useState('grey');
 
@@ -51,7 +51,7 @@ const Category = (props) => {
                                     type="text"
                                     name="name"
                                     value={name}
-                                    placeholder="name"
+                                    placeholder="Name"
                                     onChange={(e) => handleName(e)} />
 
                             </Form.Control>
@@ -59,7 +59,7 @@ const Category = (props) => {
                     </Form.Field>
                     <Form.Field>
                         <Form.Control>
-                            <Button value="Save" color="primary" type="submit">Save</Button>
+                            <Button value="Save" color="dark" type="submit">Save</Button>
                         </Form.Control>
                     </Form.Field>
                 </form>

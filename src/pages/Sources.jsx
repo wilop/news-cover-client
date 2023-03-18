@@ -1,35 +1,52 @@
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
-import { categories } from '../hooks/useCategory'
+import { Box, Container, Table, Button } from 'react-bulma-components';
+import 'bulma/css/bulma.min.css';
+
+import useSource from '../hooks/useSource'
 import Header from '../components/Header';
 
 const Sources = () => {
-
+    const { sources, deleteSource, setEditMode, setSource, loadSources } = useSource();
     const navigate = useNavigate();
-    const [list, setList] = useState(Sources);
+    const [list, setList] = useState([]);
+    const [hasChanged, setHasChanged] = useState(false);
+
+    useEffect(() => {
+        loadSources()
+            .then((data) => setList(data))
+            .catch((err) => {
+                console.log(err);
+                setList([])
+            });
+
+    }, [sources]);
 
     const remove = async (source) => {
         deleteSource(source);
-        loadSource();
-        setList(categories);
+        loadSources();
+        // setList(sources);
+        setHasChanged(!hasChanged);
 
     };
     const edit = async (source) => {
         setEditMode(true);
         setSource(source)
-        navigate('/sources');
+        navigate('/source');
 
     };
     const add = async () => {
         setEditMode(false);
-        navigate('/sources');
+        navigate('/source');
 
     };
 
     return (
         <>
             <Header title='Sources' />
-            <Box>
+
+            <Box style={{width:400, margin:'auto'}}>
                 <Container className="Table">
                     <Table>
                         <thead textColor="info">
@@ -52,7 +69,7 @@ const Sources = () => {
                         </tbody>
                     </Table>
                 </Container>
-                <Button onClick={() => add()}>Add New</Button>
+                <Button color='dark' onClick={() => add()}>Add New</Button>
             </Box>
         </>
     );

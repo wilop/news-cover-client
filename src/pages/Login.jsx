@@ -26,7 +26,7 @@ const Login = () => {
 
     login(email, password).then(() => {
       setRes('Goooolll!');
-      navigate(state?.path || "/sources");
+      navigate("/news");
     }).catch(() => { setRes('Fault!') });
   }
 
@@ -101,10 +101,10 @@ const Login = () => {
 
           <Form.Field kind="group">
             <Form.Control>
-              <Button value="Reset" color="primary" colorVariant='light' type="reset">Cancel</Button>
+              <Button value="Reset" color="dark" colorVariant='light' type="reset">Cancel</Button>
             </Form.Control>
             <Form.Control>
-              <Button value="Login" color="primary" type="submit">Login</Button>
+              <Button value="Login" color="dark" type="submit">Login</Button>
             </Form.Control>
           </Form.Field>
         </form>

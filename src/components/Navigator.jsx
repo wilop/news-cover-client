@@ -41,7 +41,7 @@ function Navigator() {
                                 </Media.Item>
                             </Media>
                         </Navbar.Link>
-                        <Navbar.Dropdown >
+                        <Navbar.Dropdown right boxed>
                             {authed && <Navbar.Item onClick={handleLogout}>Logout</Navbar.Item>}
                             {authed && !admin && <NavLink to="/sources">Sources</NavLink>}
                             {authed && admin && <NavLink to="/categories">Categories</NavLink>}

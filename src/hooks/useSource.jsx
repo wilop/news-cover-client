@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import useAuth from './useAuth';
 
-const useCategory = () => {
-
+const useSource= () => {
+    
     const {token} = useAuth();
     const [editMode, setEditMode] = useState(false);
-    const [category, setCategory] = useState(null);
-    const [categories, setCategories] = useState(null);
+    const [source, setSource] = useState(null);
+    const [sources, setSources] = useState(null);
 
     return {
 
-        editMode, setEditMode, category, setCategory, categories,
+        editMode, setEditMode, source, setSource, sources,
 
-        addCategory: (category_) => {
+        addSource: (category_) => {
             return new Promise((resolve, reject) => {
-                let url = `/category`;
+                let url = `/source`;
                 fetch(url, {
                     method: 'POST',
                     headers: {
@@ -28,10 +28,10 @@ const useCategory = () => {
                     redirect: 'follow',
                 })
                     .then((res) => res.json())
-                    .then((data) => setCategory(data));
+                    .then((data) => setSource(data));
 
-                if (category) {
-                    resolve(category);
+                if (sources) {
+                    resolve(source);
                 }
                 else {
                     reject(Error('No data found'));
@@ -40,9 +40,9 @@ const useCategory = () => {
             });
 
         },
-        editCategory: (category_) => {
+        editSource: (category_) => {
             return new Promise((resolve, reject) => {
-                let url = `/category/${category_.id}`;
+                let url = `/source/${category_.id}`;
                 fetch(url, {
                     method: 'PUT',
                     headers: {
@@ -53,10 +53,10 @@ const useCategory = () => {
                     redirect: 'follow',
                 })
                     .then((res) => res.json())
-                    .then((data) => setCategory(data));
+                    .then((data) => setSource(data));
 
-                if (category) {
-                    resolve(category);
+                if (source) {
+                    resolve(source);
                 }
                 else {
                     reject(Error('No data found'));
@@ -65,9 +65,9 @@ const useCategory = () => {
             });
 
         },
-        deleteCategory: (category_) => {
+        deleteSource: (category_) => {
             return new Promise((resolve, reject) => {
-                let url = `/category/${category_.id}`;
+                let url = `/source/${category_.id}`;
                 fetch(url, {
                     method: 'DELETE',
                     headers: {
@@ -78,10 +78,10 @@ const useCategory = () => {
                     redirect: 'follow',
                 })
                     .then((res) => res.json())
-                    .then((data) => setCategory(data));
+                    .then((data) => setSource(data));
 
-                if (category) {
-                    resolve(category);
+                if (source) {
+                    resolve(source);
                 }
                 else {
                     reject(Error('No data deleted'));
@@ -89,9 +89,9 @@ const useCategory = () => {
             });
 
         },
-        loadCategories: () => {
+        loadSources: () => {
             return new Promise((resolve, reject) => {
-                fetch("/category", {
+                fetch("/source", {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -101,10 +101,10 @@ const useCategory = () => {
                     redirect: 'follow',
                 })
                     .then((res) => res.json())
-                    .then((data) => setCategories(data));
+                    .then((data) => setSources(data));
 
-                if (categories) {
-                    resolve(categories);
+                if (sources) {
+                    resolve(sources);
                 }
                 else {
                     reject(Error('No data found'));
@@ -117,4 +117,4 @@ const useCategory = () => {
 }
 
 
-export default useCategory;
+export default useSource;
