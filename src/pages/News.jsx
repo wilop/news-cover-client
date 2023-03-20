@@ -6,41 +6,41 @@ import 'bulma/css/bulma.min.css';
 import Header from '../components/Header';
 import NewsList from '../components/NewsList';
 import Spinner from '../components/Spinner';
+import CategoryNav from '../components/CategoryNav';
+import useNews from '../hooks/useNews';
 
-const News=()=> {
-    const [data, setData] = useState(null);
+const News = () => {
+    const { loadNews, loadNewsByCategory } = useNews();
     const [list, setList] = useState([]);
+    const [hasChanged, setHasChanged] = useState(false);
 
     useEffect(() => {
-        fetch("/team", {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer {$token}',
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-        })
-            .then((res) => res.json())
-            .then((data) => { setData(data); setList(data.data); });
-    }, []);
+        loadNews()
+            .then((data) => { setList(data); console.log(data); })
+            .catch((err) => {
+                console.log(err);
+                setList([])
+            });
 
-    // const teamList = (
-    //     list !== undefined ? <TeamList teams={list} /> : <p>Loading...</p>
-    // )
-    let news = list.filter(item => item !== list[32]);
-    // teams = data ? data.data : [];
-    console.log('news', news);
+    }, [hasChanged]);
 
-    console.log('list', list);
-
+    const handleCategoryChange = (category) => {
+        loadNewsByCategory(category)
+        .then((data) => { setList(data); console.log(data); })
+        .catch((err) => {
+            console.log(err);
+            setList([])
+        });
+};
 
     return (
         <>
             <div >
-               <Header title='Your unique News Cover'/>
+                <Header title='Your unique News Cover' />
+                <CategoryNav handleCategoryChange={handleCategoryChange}/>
                 <div className="App">
                     <header className="App-header">
-                        <div>{!data ? <Spinner /> : <Box><NewsList news={news} /></Box>}</div>
+                        <div>{list.length === 0 ? <Spinner /> : <Box><NewsList news={list} /></Box>}</div>
                     </header>
                 </div>
             </div>

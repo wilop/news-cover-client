@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { Box, Form, Button } from 'react-bulma-components';
 import 'bulma/css/bulma.min.css';
@@ -9,26 +9,42 @@ import useCategory from '../hooks/useCategory'
 import Header from '../components/Header';
 
 const Source = () => {
-    const { source, editMode, editSource, addSource } = useSource();
-    const { categories } = useCategory();
+    const { editSource, addSource } = useSource();
+    const { loadCategories } = useCategory();
     const navigate = useNavigate();
-    const [edit] = useState(editMode);
-    const [name, setName] = useState('');
-    const [category, setCategory] = useState('');
-    const [rssUrl, setRssUrl] = useState('');
+    const location = useLocation();
     const [color, setColor] = useState('');
     const [list, setList] = useState([]);
+    const [edit] = useState(location.state.edit);
+    const [source, setSource] = useState(location.state.source);
+    const [category, setCategory] = useState(source.category);
+    const [name, setName] = useState(source.name);
+    const [rssUrl, setRssUrl] = useState(source.url);
+
+    useEffect(() => {
+        loadCategories()
+            .then((data) => setList(data))
+            .catch((err) => {
+                console.log(err);
+                setList([])
+            });
+
+    }, []);
 
     const handleName = (event) => {
         let value = event.target.value;
         setName(value);
         setColor('grey');
     };
-    const handleCategory = (event) => {
-        let value = event.target.value;
-        setCategory(value);
-        setColor('grey');
+
+    const handleCategory = (index) => {
+        if (index > -1 && list !== undefined) {
+            let cat = list[index];
+            setCategory(cat);
+            setColor('grey');
+        }
     };
+
     const handleRssUrl = (event) => {
         let value = event.target.value;
         setRssUrl(value);
@@ -36,14 +52,43 @@ const Source = () => {
     };
 
     const handleSubmit = (event) => {
+
         event.preventDefault();
+
         if (edit) {
-            editSource();
+
+            let oldSource = {
+                _id: source._id,
+                name: name,
+                url: rssUrl,
+                category: { name: category.name }
+            };
+
+            editSource(oldSource)
+                .then((data) => {
+                    navigate('/sources');
+
+                }).catch((err) => {
+                    console.log(err)
+                    setColor('danger');
+                });
         } else {
-            addSource();
+            let newSource = {
+                name: name,
+                url: rssUrl,
+                category: { name: category.name }
+            }
+            addSource(newSource)
+                .then((data) => {
+                    navigate('/sources');
+
+                }).catch((err) => {
+                    console.log(err)
+                    setColor('danger');
+                });
         }
-        navigate('/sources');
     };
+
 
     const handleReset = (event) => {
         event.preventDefault();
@@ -55,7 +100,7 @@ const Source = () => {
 
     return (
         <>
-            <Header title='Sources' />
+            <Header title={edit ? 'Editing source' : 'Adding new source'} />
 
             <Box style={{ width: 400, margin: 'auto' }}>
                 <form onSubmit={(e) => handleSubmit(e)}
@@ -89,10 +134,9 @@ const Source = () => {
                     <Form.Field>
                         <Form.Label>Category
                             <Form.Control>
-                                <Form.Select
-                                    value={category}
-                                    onChange={(e) => handleCategory(e)} >
-                                    {list.map((category, index) => (<option key={index} value={category}>{category.name}</option>))}
+                                <Form.Select>
+                                    <option> Select a category</option>
+                                    {list.map((category, index) => (<option key={index} value={category} onClick={(e) => handleCategory(index)} >{category.name}</option>))}
                                 </Form.Select>
 
                             </Form.Control>

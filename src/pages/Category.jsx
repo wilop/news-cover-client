@@ -34,19 +34,26 @@ const Category = (props) => {
 
             editCategory(oldCategory)
                 .then((data) => {
-                  
-                }).catch((err) => console.log(err));
+                    navigate('/categories');
 
-        }else{
+                }).catch((err) => {
+                    console.log(err)
+                    setColor('danger');
+                });
+
+        } else {
             let newCategory = {
                 name: name
             }
             addCategory(newCategory)
-              .then((data) => {
+                .then((data) => {
+                    navigate('/categories');
 
-                }).catch((err) => console.log(err));
+                }).catch((err) => {
+                    console.log(err)
+                    setColor('danger');
+                });
         }
-        navigate('/categories');
     };
 
     const handleReset = (event) => {
@@ -56,7 +63,7 @@ const Category = (props) => {
     };
     return (
         <>
-            <Header title="Category" />
+            <Header title={edit ? 'Editing category' : 'Adding new category'} />
             <Box style={{ width: 400, margin: 'auto' }}>
                 <form onSubmit={(e) => handleSubmit(e)}
                     onReset={(e) => handleReset(e)}>

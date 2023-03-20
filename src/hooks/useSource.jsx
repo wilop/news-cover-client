@@ -1,73 +1,92 @@
 import { useState } from 'react';
 import useAuth from './useAuth';
 
-const useSource= () => {
-    
-    const {token} = useAuth();
-    const [editMode, setEditMode] = useState(false);
-    const [source, setSource] = useState(null);
-    const [sources, setSources] = useState(null);
+const useSource = () => {
+
+    const { token, user } = useAuth();
 
     return {
 
-        editMode, setEditMode, source, setSource, sources,
-
-        addSource: (category_) => {
+        addSource: (source) => {
+            console.log('source',source);
             return new Promise((resolve, reject) => {
-                let url = `/source`;
+                let url = `/newsource`;
                 fetch(url, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        "name": category_.name,
-                    }),
+                    body: JSON.stringify(
+                        {
+                            url: source.url,
+                            name: source.name,
+                            category: source.category,
+                            user: user.email
+                        }
+                    ),
 
                     redirect: 'follow',
                 })
-                    .then((res) => res.json())
-                    .then((data) => setSource(data));
+                    .then((res) => {
+                        if (res.ok) {
+                            return res.json();
+                        } else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then((data) => {
+                        if (data) {
 
-                if (sources) {
-                    resolve(source);
-                }
-                else {
-                    reject(Error('No data found'));
-                }
+                            resolve(data.data);
+                        }
+                    })
+                    .catch((err) => reject(err));
 
             });
 
         },
-        editSource: (category_) => {
+        editSource: (source) => {
+            // console.log('source',source);
             return new Promise((resolve, reject) => {
-                let url = `/source/${category_.id}`;
+                let url = `/newsource/${source._id}`;
                 fetch(url, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
-
+                    body: JSON.stringify(
+                        {
+                            url: source.url,
+                            name: source.name,
+                            category: source.category
+                        }
+                    ),
                     redirect: 'follow',
                 })
-                    .then((res) => res.json())
-                    .then((data) => setSource(data));
+                    .then((res) => {
+                        if (res.ok) {
+                            return res.json();
+                        } else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then((data) => {
+                        if (data) {
 
-                if (source) {
-                    resolve(source);
-                }
-                else {
-                    reject(Error('No data found'));
-                }
+                            resolve(data.data);
+                        }
+                    })
+                    .catch((err) => reject(err));
 
             });
 
         },
-        deleteSource: (category_) => {
+        deleteSource: (source) => {
+            // console.log('source',source);
             return new Promise((resolve, reject) => {
-                let url = `/source/${category_.id}`;
+                let url = `/newsource/${source._id}`;
                 fetch(url, {
                     method: 'DELETE',
                     headers: {
@@ -77,21 +96,26 @@ const useSource= () => {
 
                     redirect: 'follow',
                 })
-                    .then((res) => res.json())
-                    .then((data) => setSource(data));
+                    .then((res) => {
+                        if (res.ok) {
+                            return res.json();
+                        } else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then((data) => {
+                        if (data) {
 
-                if (source) {
-                    resolve(source);
-                }
-                else {
-                    reject(Error('No data deleted'));
-                }
+                            resolve(data.data);
+                        }
+                    })
+                    .catch((err) => reject(err));
             });
 
         },
         loadSources: () => {
             return new Promise((resolve, reject) => {
-                fetch("/source", {
+                fetch(`/newsource`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -100,15 +124,20 @@ const useSource= () => {
 
                     redirect: 'follow',
                 })
-                    .then((res) => res.json())
-                    .then((data) => setSources(data));
+                    .then((res) => {
+                        if (res.ok) {
+                            return res.json();
+                        } else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then((data) => {
+                        if (data) {
 
-                if (sources) {
-                    resolve(sources);
-                }
-                else {
-                    reject(Error('No data found'));
-                }
+                            resolve(data.data);
+                        }
+                    })
+                    .catch((err) => reject(err));
             });
         }
 

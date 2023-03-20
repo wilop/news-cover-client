@@ -8,7 +8,7 @@ import useSource from '../hooks/useSource'
 import Header from '../components/Header';
 
 const Sources = () => {
-    const { sources, deleteSource, setEditMode, setSource, loadSources } = useSource();
+    const { deleteSource, loadSources } = useSource();
     const navigate = useNavigate();
     const [list, setList] = useState([]);
     const [hasChanged, setHasChanged] = useState(false);
@@ -21,24 +21,40 @@ const Sources = () => {
                 setList([])
             });
 
-    }, [sources]);
+    }, [hasChanged]);
 
-    const remove = async (source) => {
-        deleteSource(source);
-        loadSources();
-        // setList(sources);
-        setHasChanged(!hasChanged);
+    const remove = async (index) => {
+        if (index > -1 && list !== undefined) {
+            let source = list[index];
+            deleteSource(source)
+                .then((data) => {
+                    if (data._id === source._id) {
+                        let list_temp = list;
+                        setList(list_temp.splice(source, 1));
+                        setHasChanged(!hasChanged)
+
+                    }
+                }).catch((err) => console.log(err));
+            // setHasChanged(!hasChanged);
+        }
+    };
+
+    const edit = async (index) => {
+        if (index > -1 && list !== undefined) {
+            let source = list[index];
+
+            let state_ = { state: { source: source, edit: true } };
+
+            navigate('/source', state_);
+        }
 
     };
-    const edit = async (source) => {
-        setEditMode(true);
-        setSource(source)
-        navigate('/source');
 
-    };
     const add = async () => {
-        setEditMode(false);
-        navigate('/source');
+
+        let state_ = { state: { source: { _id: '', name: '', url: '', category: { name: '' } }, edit: false } };
+
+        navigate('/source', state_);
 
     };
 
@@ -46,9 +62,9 @@ const Sources = () => {
         <>
             <Header title='Sources' />
 
-            <Box style={{width:400, margin:'auto'}}>
+            <Box style={{ width: 600, margin: 'auto' }}>
                 <Container className="Table">
-                    <Table>
+                    <Table size='fullwidth'>
                         <thead textColor="info">
                             <tr>
                                 <th>Name</th>
@@ -57,13 +73,13 @@ const Sources = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {list.map((source, index) => (
+                            {list.length && list.map((source, index) => (
                                 <tr key={index}>
                                     <td> {source.name}</td>
-                                    <td> {source.source}</td>
+                                    <td> {source.category.name}</td>
                                     <td>
-                                        <Button renderAs='string' onClick={() => edit(source)}>Edit</Button> |
-                                        <Button renderAs='string' onClick={() => remove(source)}>Delete</Button>
+                                        <Button color='link' inverted onClick={() => edit(index)}>Edit</Button> |
+                                        <Button color='link' inverted onClick={() => remove(index)}>Delete</Button>
                                     </td>
                                 </tr>))}
                         </tbody>

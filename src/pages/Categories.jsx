@@ -50,7 +50,7 @@ const Categories = () => {
 
     };
 
-    const add = async (category) => {
+    const add = async () => {
       
         let state_ = { state: { category: {_id:'', name:''}, edit: false } };
 
@@ -62,7 +62,7 @@ const Categories = () => {
         <>
             <Header title="Categories" />
 
-            <Box style={{ width: 400, margin: 'auto' }}>
+            <Box style={{ width: 600, margin: 'auto' }}>
                 <Container className="Table">
                     <Table>
                         <thead textColor="info">

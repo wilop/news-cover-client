@@ -10,7 +10,6 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { login } = useAuth();
-  // const { saveSession } = useAuth();
   const { state } = useLocation();
 
   const [email, setEmail] = useState('');

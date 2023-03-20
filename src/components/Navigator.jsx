@@ -3,7 +3,6 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 import { Navbar, Heading, Media, Image } from 'react-bulma-components'
-// import logo from '../name-logo.png';
 import 'bulma/css/bulma.min.css';
 
 function Navigator() {
@@ -19,14 +18,6 @@ function Navigator() {
 
     return (
         <Navbar active color='dark'>
-            <Navbar.Brand>
-                <Navbar.Item >
-                    <NavLink to="/home">
-                        {/* <Image src={logo} alt="Qatar Logo" className="d-inline-block align-top" /> */}
-                    </NavLink>
-                </Navbar.Item>
-                <Navbar.Burger />
-            </Navbar.Brand>
             <Navbar.Menu>
                 <Navbar.Container align='right'>
                     <Navbar.Item hoverable={true} >
@@ -42,12 +33,20 @@ function Navigator() {
                                 </Media.Item>
                             </Media>
                         </Navbar.Link>
-                        <Navbar.Dropdown right boxed>
-                            {authed && <Navbar.Item onClick={handleLogout}>Logout</Navbar.Item>}
-                            {authed && user.role === "admin" && <NavLink to="/categories">Categories</NavLink>}
-                            {authed && user.role === "user" && <NavLink to="/sources">Sources</NavLink>}
+                        {authed && <Navbar.Dropdown right boxed>
+                            <Navbar.Item>
+                                <NavLink to="/news">My Cover</NavLink>
+                            </Navbar.Item>
+                             <Navbar.Item>
+                                <NavLink to="/sources">Sources</NavLink>
+                            </Navbar.Item>
+                            {user.role === "admin" && <Navbar.Item>
+                                <NavLink to="/categories">Categories</NavLink>
+                            </Navbar.Item>}
+                         
+                            <Navbar.Item onClick={handleLogout}>Logout</Navbar.Item>
 
-                        </Navbar.Dropdown>
+                        </Navbar.Dropdown>}
                     </Navbar.Item>
                 </Navbar.Container>
             </Navbar.Menu>
