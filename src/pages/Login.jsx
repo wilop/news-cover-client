@@ -10,6 +10,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { login } = useAuth();
+  // const { saveSession } = useAuth();
   const { state } = useLocation();
 
   const [email, setEmail] = useState('');
@@ -18,16 +19,24 @@ const Login = () => {
 
   const [res, setRes] = useState('');
 
-  const login_ = async () => {
+  const login_ = () => {
 
-    setColor('danger');
     setEmail('');
     setPassword('');
 
-    login(email, password).then(() => {
-      setRes('Goooolll!');
-      navigate("/news");
-    }).catch(() => { setRes('Fault!') });
+    login(email, password).then((session) => {
+      if (session.role === "admin") {
+        navigate(state?.path || "/categories");
+
+      } else {
+        navigate(state?.path || "/news");
+      }
+      setRes('Welcome!');
+    }).catch(() => {
+      setRes('Wrong email!');
+      setColor('danger');
+
+    });
   }
 
   const handleEmail = (event) => {

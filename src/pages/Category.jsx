@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Box, Form, Button } from 'react-bulma-components';
 import 'bulma/css/bulma.min.css';
 
@@ -7,28 +7,44 @@ import useCategory from '../hooks/useCategory';
 import Header from "../components/Header";
 
 const Category = (props) => {
-    const { category, editMode, editCategory, addCategory } = useCategory();
+    const { editCategory, addCategory } = useCategory();
     const navigate = useNavigate();
-    const [edit] = useState(editMode);
-    const [category_, setCategory_] = useState({});
-    const [name, setName] = useState(category_.name);
+    const location = useLocation();
     const [color, setColor] = useState('grey');
+    const [edit] = useState(location.state.edit);
+    const [category, setCategory] = useState(location.state.category);
+    const [name, setName] = useState(category.name);
 
     const handleName = (event) => {
         let value = event.target.value;
         setName(value);
-        let cat = category_;
-        cat.name = value;
-        setCategory_(cat);
         setColor('grey');
     };
 
     const handleSubmit = (event) => {
+
         event.preventDefault();
+
         if (edit) {
-            editCategory(category_);
-        } else {
-            addCategory(name);
+
+            let oldCategory = {
+                _id: category._id,
+                name: name
+            };
+
+            editCategory(oldCategory)
+                .then((data) => {
+                  
+                }).catch((err) => console.log(err));
+
+        }else{
+            let newCategory = {
+                name: name
+            }
+            addCategory(newCategory)
+              .then((data) => {
+
+                }).catch((err) => console.log(err));
         }
         navigate('/categories');
     };
@@ -36,7 +52,7 @@ const Category = (props) => {
     const handleReset = (event) => {
         event.preventDefault();
         setColor('grey');
-        setCategory_('');
+        setCategory('');
     };
     return (
         <>

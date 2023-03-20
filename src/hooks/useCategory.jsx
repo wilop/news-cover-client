@@ -1,20 +1,14 @@
-import { useState } from 'react';
 import useAuth from './useAuth';
 
 const useCategory = () => {
 
-    const {token} = useAuth();
-    const [editMode, setEditMode] = useState(false);
-    const [category, setCategory] = useState(null);
-    const [categories, setCategories] = useState(null);
+    const { token } = useAuth();
 
     return {
 
-        editMode, setEditMode, category, setCategory, categories,
-
         addCategory: (category_) => {
             return new Promise((resolve, reject) => {
-                let url = `/category`;
+                let url = `/categories`;
                 fetch(url, {
                     method: 'POST',
                     headers: {
@@ -27,47 +21,61 @@ const useCategory = () => {
 
                     redirect: 'follow',
                 })
-                    .then((res) => res.json())
-                    .then((data) => setCategory(data));
-
-                if (category) {
-                    resolve(category);
-                }
-                else {
-                    reject(Error('No data found'));
-                }
+                    .then((res) => {
+                        if (res.ok) {
+                            return res.json();
+                        } else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then((data) => {
+                        if (data) {
+                            resolve(data.data);
+                        }
+                    })
+                    .catch((err) => reject(err));
 
             });
 
         },
+
         editCategory: (category_) => {
             return new Promise((resolve, reject) => {
-                let url = `/category/${category_.id}`;
+                let url = `/categories/${category_._id}`;
                 fetch(url, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
+                    body: JSON.stringify({
+                        "name": category_.name,
+                    }),
 
                     redirect: 'follow',
                 })
-                    .then((res) => res.json())
-                    .then((data) => setCategory(data));
+                    .then((res) => {
+                        if (res.ok) {
+                            return res.json();
+                        } else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then((data) => {
+                        if (data) {
 
-                if (category) {
-                    resolve(category);
-                }
-                else {
-                    reject(Error('No data found'));
-                }
+                            resolve(data.data);
+                        }
+                    })
+                    .catch((err) => reject(err));
 
             });
 
         },
+
         deleteCategory: (category_) => {
             return new Promise((resolve, reject) => {
-                let url = `/category/${category_.id}`;
+                let url = `/categories/${category_._id}`;
                 fetch(url, {
                     method: 'DELETE',
                     headers: {
@@ -77,21 +85,27 @@ const useCategory = () => {
 
                     redirect: 'follow',
                 })
-                    .then((res) => res.json())
-                    .then((data) => setCategory(data));
+                    .then((res) => {
+                        if (res.ok) {
+                            return res.json();
+                        } else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then((data) => {
+                        if (data) {
 
-                if (category) {
-                    resolve(category);
-                }
-                else {
-                    reject(Error('No data deleted'));
-                }
+                            resolve(data.data);
+                        }
+                    })
+                    .catch((err) => reject(err));
             });
 
         },
+
         loadCategories: () => {
             return new Promise((resolve, reject) => {
-                fetch("/category", {
+                fetch("/categories", {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -100,21 +114,25 @@ const useCategory = () => {
 
                     redirect: 'follow',
                 })
-                    .then((res) => res.json())
-                    .then((data) => setCategories(data));
+                    .then((res) => {
+                        if (res.ok) {
+                            return res.json();
+                        } else {
+                            throw new Error(res.statusText);
+                        }
+                    })
+                    .then((data) => {
+                        if (data) {
 
-                if (categories) {
-                    resolve(categories);
-                }
-                else {
-                    reject(Error('No data found'));
-                }
+                            resolve(data.data);
+                        }
+                    })
+                    .catch((err) => reject(err));
+
             });
         }
 
-
     }
-}
-
+};
 
 export default useCategory;

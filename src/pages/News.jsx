@@ -27,9 +27,9 @@ const News=()=> {
     // const teamList = (
     //     list !== undefined ? <TeamList teams={list} /> : <p>Loading...</p>
     // )
-    let teams = list.filter(item => item !== list[32]);
+    let news = list.filter(item => item !== list[32]);
     // teams = data ? data.data : [];
-    console.log('team', teams);
+    console.log('news', news);
 
     console.log('list', list);
 
@@ -40,7 +40,7 @@ const News=()=> {
                <Header title='Your unique News Cover'/>
                 <div className="App">
                     <header className="App-header">
-                        <div>{!data ? <Spinner /> : <Box><NewsList teams={teams} /></Box>}</div>
+                        <div>{!data ? <Spinner /> : <Box><NewsList news={news} /></Box>}</div>
                     </header>
                 </div>
             </div>

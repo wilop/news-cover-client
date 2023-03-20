@@ -29,9 +29,9 @@ const NewsList = (props) => {
                             <Card.Content>
                                 <Media>
                                     <Media.Item>
-                                        <Heading size={4}>{new_.name_en}</Heading>
+                                        <Heading size={4}>{new_.title}</Heading>
                                         <Heading subtitle size={6}>
-                                            Group:{' '}{new_.groups}
+                                            {new_.category}
                                         </Heading>
                                     </Media.Item>
                                 </Media>

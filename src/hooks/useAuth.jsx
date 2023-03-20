@@ -1,63 +1,105 @@
-import * as React from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 
-// import useLogin from './useLogin'
-
-const authContext = React.createContext();
+const authContext = createContext();
 
 function useAuth() {
-    const [authed, setAuthed] = React.useState(false);
-    const [admin, setAdmin] = React.useState(false);
+    const [authed, setAuthed] = useState(false);
+    const [token, setToken] = useState('');
+    const [user, setUser] = useState({
+        id: '',
+        first_name: '',
+        last_name: '',
+        email: '',
+        role: ''
+    });
 
-    const [data, setData] = React.useState(null);
-    const [token, setToken] = React.useState('');
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
+    let [session, setSession] = useState({
+        token: '',
+        id: '',
+        first_name: '',
+        last_name: '',
+        email: '',
+        role: '',
+        authed: false
+    });
 
 
-    React.useEffect(() => {
-        fetch("/login", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                "email": email,
-                "password": password,
-            }),
-            redirect: 'follow',
-        })
-            .then((res) => res.json())
-            .then((data) => setData(data));
-    }, [password]);
+    useEffect(() => {
+        setAuthed(session.authed);
+        setUser(
+            {
+                id: session.id,
+                first_name: session.first_name,
+                last_name: session.last_name,
+                email: session.email,
+                role: session.role
+            }
+        );
+        setToken(session.token);
+
+    }, [session, token]);
+
+    async function getSession(url = "", data = {}) {
+
+        const response = await fetch(url, {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "include", // include*, same-origin, omit
+            headers: {
+                "Content-Type": "application/json",
+
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify(data),
+        });
+        return response // parses JSON response into native JavaScript objects
+    };
 
     return {
-        authed, admin ,data, token, email,
-        login(email_, password_) {
+        authed, token, user,
 
-            setEmail(email_);
-            setPassword(password_);
+        async login(email_, password_) {
+
+            let response = await getSession("/session", { email: email_ })
+            let data_ = await response.json();
 
             return new Promise((resolve, reject) => {
-                console.log('data', data);
-                // if (data.status === "success") {
-                //     setAuthed(true);
-                //     resolve(data);
-                //     setEmail(email_)
-                // }
-                // else {
-                //     reject(Error('No se pudo'));
-                // }
-                setAuthed(true);
-                resolve(data);
-                setEmail(email_)
-                setAdmin(true);
+                if (response.status === 201) {
+                    session = {
+                        token: data_.token,
+                        id: data_.data._id,
+                        first_name: data_.data.first_name,
+                        last_name: data_.data.last_name,
+                        email: data_.data.email,
+                        role: data_.data.role.name,
+                        authed: true
+                    }
+                    setSession(session);
+                    resolve(session);
+                }
+                else {
+                    reject(Error('No se pudo'));
+                }
             });
+
+
+
         },
 
         logout() {
             return new Promise((resolve) => {
-                setAuthed(false);
-                setData(null);
-                setToken('');
-                setEmail('');
+                session = {
+                    token: '',
+                    id: '',
+                    first_name: '',
+                    last_name: '',
+                    email: '',
+                    role: '',
+                    authed: false
+                }
+                setSession(session);
                 resolve();
             });
         },
@@ -70,7 +112,5 @@ export function AuthProvider({ children }) {
 }
 
 export default function AuthConsumer() {
-    return React.useContext(authContext);
-}
-
-// export default useAuth;
+    return useContext(authContext);
+};

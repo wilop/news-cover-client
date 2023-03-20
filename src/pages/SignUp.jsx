@@ -1,66 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 import { Box, Form, Button, Notification } from 'react-bulma-components';
 import 'bulma/css/bulma.min.css';
 
 import Header from '../components/Header';
+import useUser from '../hooks/useUser';
 
-function SignUp() {
+const SignUp = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
-
-    const [user, setUser] = useState(false);
-    const [username, setUsername] = useState('');
+    const { addUser } = useUser();
+    const [firstname, setFirstName] = useState('');
+    const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repassword, setRePassword] = useState('');
     const [color, setColor] = useState('grey');
     const [res, setRes] = useState('');
-    const [data, setData] = useState(null);
 
-    useEffect(() => {
-        fetch("/user", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                "name": username,
-                "email": email,
-                "password": password,
-                "passwordConfirm": repassword,
-            }),
-            redirect: 'follow',
-        })
-            .then((res) => res.json())
-            .then((data) => setData(data));
-    }, [user]);
-
-    const register = () => {
-        setUser(!user);
-        try {
-            if (data.status === "success") {
-                navigate(state?.path || "/login");
-                setRes('Gooolll!');
-
-            } else {
-                setRes('Fault!');
-            }
-        } catch (error) {
-            setRes('Fault!')
-        }
-
-        setColor('danger');
-        setUsername('');
-        setEmail('');
-        setPassword('');
-        setRePassword('');
-        setRes('Fault!')
-
-    }
-
-    const handleUsername = (event) => {
+    const handleFirstName = (event) => {
         const value = event.target.value;
-        setUsername(value);
+        setFirstName(value);
+        setColor('grey');
+        setRes('');
+
+    };
+
+    const handleLastName = (event) => {
+        const value = event.target.value;
+        setLastname(value);
         setColor('grey');
         setRes('');
 
@@ -89,7 +58,26 @@ function SignUp() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        register();
+        let newUser = {
+            first_name: firstname,
+            last_name: lastname,
+            email: email,
+            password: password,
+            repassword: repassword
+        };
+
+        addUser(newUser).then((data) => {
+
+            navigate(state?.path || "/login");
+        }).catch((err) => {
+            setColor('danger');
+            setFirstName('');
+            setEmail('');
+            setPassword('');
+            setRePassword('');
+            setRes('User already exist!')
+        });
+
     };
 
     const handleReset = (event) => {
@@ -102,20 +90,33 @@ function SignUp() {
 
     return (
         <div >
-            <Header title='User Registration'/>
+            <Header title='User Registration' />
             <br />
             <Box style={{ width: 400, margin: 'auto' }}>
                 <form onSubmit={(e) => handleSubmit(e)}
                     onReset={(e) => handleReset(e)}>
                     <Form.Field>
-                        <Form.Label>UserName
+                        <Form.Label>First Name
                             <Form.Control>
                                 <Form.Input color={color} textColor={color}
                                     type="text"
-                                    name="username"
-                                    value={username}
-                                    placeholder="username"
-                                    onChange={(e) => handleUsername(e)} />
+                                    name="firstname"
+                                    value={firstname}
+                                    placeholder="firstname"
+                                    onChange={(e) => handleFirstName(e)} />
+
+                            </Form.Control>
+                        </Form.Label>
+                    </Form.Field>
+                    <Form.Field>
+                        <Form.Label>Last Name
+                            <Form.Control>
+                                <Form.Input color={color} textColor={color}
+                                    type="text"
+                                    name="lastname"
+                                    value={lastname}
+                                    placeholder="firstname"
+                                    onChange={(e) => handleLastName(e)} />
 
                             </Form.Control>
                         </Form.Label>
@@ -128,7 +129,7 @@ function SignUp() {
                                     type="text"
                                     name="email"
                                     value={email}
-                                    placeholder="username@email.com"
+                                    placeholder="firstname@email.com"
                                     onChange={(e) => handleEmail(e)} />
 
                             </Form.Control>

@@ -1,75 +1,91 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, Button, Table, Container} from 'react-bulma-components';
+import { Box, Button, Table, Container } from 'react-bulma-components';
 import 'bulma/css/bulma.min.css';
 
 import useCategory from '../hooks/useCategory';
 import Header from '../components/Header';
 
 const Categories = () => {
-    const { setCategory, setEditMode, categories, deleteCategory, loadCategories } = useCategory();
+    const {  deleteCategory, loadCategories } = useCategory();
     const navigate = useNavigate();
     const [list, setList] = useState([]);
     const [hasChanged, setHasChanged] = useState(false);
 
     useEffect(() => {
         loadCategories()
-            .then((data) => setList(data))
+            .then((data) => { setList(data); console.log(data); })
             .catch((err) => {
                 console.log(err);
                 setList([])
             });
 
-    }, [categories]);
+    }, [hasChanged]);
 
-    const remove = async (category) => {
-        deleteCategory(category);
-        loadCategories();
-        // setList(categories);
-        setHasChanged(!hasChanged);
+    const remove = async (index) => {
+        if (index > -1 && list !== undefined) {
+            let category = list[index];
+            deleteCategory(category)
+                .then((data) => {
+                    if (data._id === category._id) {
+                        let list_temp = list;
+                        setList(list_temp.splice(category, 1));
+                        setHasChanged(!hasChanged)
+
+                    }
+                }).catch((err) => console.log(err));
+            // setHasChanged(!hasChanged);
+        }
+    };
+
+    const edit = async (index) => {
+        if (index > -1 && list !== undefined) {
+            let category = list[index];
+       
+            let state_ = { state: { category: category, edit: true } };
+
+            navigate('/category', state_);
+        }
 
     };
-    const edit = async (category) => {
-        setEditMode(true);
-        setCategory(category)
-        navigate('/category');
 
-    };
-    const add = async () => {
-        setEditMode(false);
-        navigate('/category');
+    const add = async (category) => {
+      
+        let state_ = { state: { category: {_id:'', name:''}, edit: false } };
+
+        navigate('/category', state_);
 
     };
 
     return (
         <>
             <Header title="Categories" />
-            
-                    <Box style={{width:400, margin:'auto'}}>
-                        <Container className="Table">
-                            <Table>
-                                <thead textColor="info">
-                                    <tr>
-                                        <th>Category</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {list.map((category, index) => (
-                                        <tr key={index}>
-                                            <td> {category.name}</td>
-                                            <td>
-                                                <Button renderAs='string' onClick={() => edit(category)}>Edit</Button> |
-                                                <Button renderAs='string' onClick={() => remove(category)}>Delete</Button>
-                                            </td>
-                                        </tr>))}
-                                </tbody>
-                            </Table>
-                        </Container>
-                        <Button color='dark' onClick={() => add()}>Add New</Button>
-                    </Box>
-                 </>
+
+            <Box style={{ width: 400, margin: 'auto' }}>
+                <Container className="Table">
+                    <Table>
+                        <thead textColor="info">
+                            <tr>
+                                <th>Category</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {list.map((category, index) => (
+                                <tr key={index}>
+                                    <td> {category.name}</td>
+                                    <td>
+                                        <Button text inverted color='link' onClick={() => edit(index)}>Edit</Button> |
+                                        <Button text inverted color='link' onClick={() => remove(index)}>Delete</Button>
+                                    </td>
+                                </tr>))}
+                        </tbody>
+                    </Table>
+                </Container>
+                <Button color='dark' onClick={() => add()}>Add New</Button>
+            </Box>
+        </>
     );
 };
 
