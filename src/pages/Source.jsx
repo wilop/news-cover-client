@@ -40,6 +40,7 @@ const Source = () => {
     const handleCategory = (index) => {
         if (index > -1 && list !== undefined) {
             let cat = list[index];
+            console.log('cat',cat);
             setCategory(cat);
             setColor('grey');
         }
