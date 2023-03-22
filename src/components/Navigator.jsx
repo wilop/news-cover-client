@@ -2,7 +2,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 
 import useAuth from '../hooks/useAuth';
 
-import { Navbar, Heading, Media, Image } from 'react-bulma-components'
+import { Navbar, Heading, Media } from 'react-bulma-components'
 import 'bulma/css/bulma.min.css';
 
 function Navigator() {
@@ -10,7 +10,8 @@ function Navigator() {
     const { authed, logout, user } = useAuth();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
+    const handleLogout = (event) => {
+        event.preventDefault();
         logout();
         navigate("/login");
     };
@@ -24,10 +25,10 @@ function Navigator() {
                         <Navbar.Link >
                             <Media>
                                 <Media.Item >
-                                    <Heading textColor='info' size={6}>
+                                    <Heading textcolor='info' size={6}>
                                         {user.email !== '' ? 'Welcome' : ''}
                                     </Heading>
-                                    <Heading textColor='primary' subtitle size={6}>
+                                    <Heading textcolor='primary' subtitle size={6}>
                                         {user.first_name !== '' ? user.first_name : ''}
                                     </Heading>
                                 </Media.Item>
@@ -37,14 +38,14 @@ function Navigator() {
                             <Navbar.Item>
                                 <NavLink to="/news">My Cover</NavLink>
                             </Navbar.Item>
-                             <Navbar.Item>
+                            <Navbar.Item>
                                 <NavLink to="/sources">Sources</NavLink>
                             </Navbar.Item>
                             {user.role === "admin" && <Navbar.Item>
                                 <NavLink to="/categories">Categories</NavLink>
                             </Navbar.Item>}
-                         
-                            <Navbar.Item onClick={handleLogout}>Logout</Navbar.Item>
+
+                            <Navbar.Item onClick={(e)=>handleLogout(e)}>Logout</Navbar.Item>
 
                         </Navbar.Dropdown>}
                     </Navbar.Item>

@@ -6,9 +6,10 @@ const useNews = () => {
 
     return {
 
-        loadNews: () => {
+        loadNews: (category) => {
+            let url = category !== 'All' ? `/news/search/${user.id}?category=${category}` : `/news/${user.id}`;
             return new Promise((resolve, reject) => {
-                fetch(`/news/`, {
+                fetch(url, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -25,37 +26,8 @@ const useNews = () => {
                         }
                     })
                     .then((data) => {
-                        if (data) {
-
-                            resolve(data.data);
-                        }
-                    })
-                    .catch((err) => reject(err));
-
-            });
-        },
-
-        loadNewsByCategory: (category) => {
-            return new Promise((resolve, reject) => {
-                fetch(`/news/search?category=${category._id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-
-                    redirect: 'follow',
-                })
-                    .then((res) => {
-                        if (res.ok) {
-                            return res.json();
-                        } else {
-                            throw new Error(res.statusText);
-                        }
-                    })
-                    .then((data) => {
-                        if (data) {
-
+                        if (data && data.data.length) {
+                            data.data.sort((a, b) => new Date(a.date).getTime() < new Date(b.date).getTime());
                             resolve(data.data);
                         }
                     })
@@ -65,6 +37,11 @@ const useNews = () => {
         }
 
     }
+
+};
+
+const prepareNews = (data) => {
+    console.log(data.sort((a, b) => new Date(a.date).getTime() > new Date(b.date).getTime()));
 };
 
 export default useNews;

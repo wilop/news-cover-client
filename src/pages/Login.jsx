@@ -24,12 +24,8 @@ const Login = () => {
     setPassword('');
 
     login(email, password).then((session) => {
-      if (session.role === "admin") {
-        navigate(state?.path || "/categories");
-
-      } else {
-        navigate(state?.path || "/news");
-      }
+      let path = session.role === 'admin' ? '/categories' : '/news';
+      navigate(state?.path || path);
       setRes('Welcome!');
     }).catch(() => {
       setRes('Wrong email!');
@@ -45,12 +41,12 @@ const Login = () => {
     setRes('');
   };
 
-  const handlePassword = (event) => {
-    const value = event.target.value;
-    setPassword(value);
-    setColor('grey');
-    setRes('');
-  };
+  // const handlePassword = (event) => {
+  //   const value = event.target.value;
+  //   setPassword(value);
+  //   setColor('grey');
+  //   setRes('');
+  // };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -87,7 +83,7 @@ const Login = () => {
             </Form.Label>
           </Form.Field>
 
-          <Form.Field>
+          {/* <Form.Field>
             <Form.Label>Password
               <Form.Control>
                 <Form.Input color={color} textColor={color}
@@ -99,7 +95,7 @@ const Login = () => {
 
               </Form.Control>
             </Form.Label>
-          </Form.Field>
+          </Form.Field> */}
 
           <Form.Field kind='group'>
             <Form.Label pr={5} >Not an User?

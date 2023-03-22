@@ -25,7 +25,6 @@ const useUser = () => {
                     redirect: 'follow',
                 })
                     .then((res) => {
-                        console.log(user_);
                         if (res.ok) {
                             return res.json();
                         } else {

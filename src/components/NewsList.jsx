@@ -1,45 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-// import ShowModal from '../hooks/ShowModal'
-// import Modalnews from './Modalnews'
-
-import { Card, Media, Heading, Columns } from 'react-bulma-components'
+import { Image, Notification, Heading, Columns, Tag, Content, Button } from 'react-bulma-components'
 import 'bulma/css/bulma.min.css';
 
 const NewsList = (props) => {
 
-    const [news] = useState(props.news);
-    // const { isShowing, toggle } = ShowModal();
-    console.log('news2', news);
+    const [news, setNews] = useState(props.news);
+
+    useEffect(() => {
+        setNews(props.news);
+    }, [props.news]);
 
     return (
 
         <>
-            {news.length && (<Columns>
+            {news.length && (<Columns size='half'>
                 {news.map((new_, index) => (
-                    <Columns.Column key={index}>
-                        <Card style={{ width: 300, margin: 'auto' }}>
-                            <Heading textColor='primary' >
-                                New:{' '}{new_.title}
-                                Fecha:{' '}{new_.date}
-                            </Heading>
-                            <Card.Image
-                                size="4by3"
-                                src={new_.image}
-                                alt="No picture!" />
-                            <Card.Content>
-                                <Media>
-                                    <Media.Item>
-                                        <p size={4}>{new_.short_description}</p>
-                                        <Heading subtitle size={6}>
-                                            {new_.category.name}
-                                        </Heading>
-                                    </Media.Item>
-                                </Media>
-                            </Card.Content>
-                            
-
-                        </Card>
+                    <Columns.Column size={4} key={index} >
+                        <Notification color='info' light style={{height: 600}}>
+                            <Tag color='info'>{'Date:'} {new_.date.replace('T', ' Hour: ').replace('000Z', '')}</Tag>
+                            <a href={new_.permalink} target='_blank' style={{ textDecoration: 'none' }} >
+                                <Heading subtitle >
+                                    {new_.title}
+                                </Heading>
+                            </a>
+                            <a href={new_.permalink} target='_blank' style={{ textDecoration: 'none' }}>
+                                <Image
+                                    size="96"
+                                    src={new_.image.split(' ')[3].replace('src="', '').replace('"', '')}
+                                    alt="No picture!" />
+                            </a>
+                            <Content>
+                                {new_.short_description.substring(0, 195).concat('[...]')}
+                            </Content>
+                            <Tag color='info'>
+                                {new_.category.name}
+                            </Tag>
+                            <Content>
+                                <a href={new_.permalink} target='_blank'>
+                                    See more...
+                                </a>
+                            </Content>
+                        </Notification>
                     </Columns.Column>
                 ))}
             </Columns>)

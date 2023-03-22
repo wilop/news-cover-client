@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { Box, Heading, Container, Image, } from 'react-bulma-components'
+import { Box } from 'react-bulma-components'
 import 'bulma/css/bulma.min.css';
 
 import Header from '../components/Header';
@@ -10,41 +10,38 @@ import CategoryNav from '../components/CategoryNav';
 import useNews from '../hooks/useNews';
 
 const News = () => {
-    const { loadNews, loadNewsByCategory } = useNews();
+    const { loadNews } = useNews();
     const [list, setList] = useState([]);
-    const [hasChanged, setHasChanged] = useState(false);
+    const [category, setCategory] = useState('All');
 
     useEffect(() => {
-        loadNews()
-            .then((data) => {setList(data); console.log(data); })
+        loadNews(category)
+            .then((data) => {
+                setList(data); console.log(data);
+            })
             .catch((err) => {
                 console.log(err);
                 setList([])
             });
 
-    }, [hasChanged]);
+    }, [category]);
 
     const handleCategoryChange = (category) => {
-        loadNewsByCategory(category)
-        .then((data) => { setList(data); console.log(data); })
-        .catch((err) => {
-            console.log(err);
-            setList([])
-        });
-};
+        setCategory(category);
+    };
+
+    const handleAllNews = () => {
+        setCategory('All');
+    };
+
+    const newsList = (
+        list.length ? <Box><NewsList news={list} /></Box> : <Spinner />);
 
     return (
         <>
-            <div >
-                <Header title='Your unique News Cover' />
-                <CategoryNav handleCategoryChange={handleCategoryChange}/>
-                <div className="App">
-                    <header className="App-header">
-                        <div>{list.length === 0 ? <Spinner /> : <Box><NewsList news={list} /></Box>}</div>
-                    </header>
-                </div>
-            </div>
-
+            <Header title='Your unique News Cover' />
+            <CategoryNav handleCategoryChange={handleCategoryChange} handleAllNews={handleAllNews} />
+            {newsList}
         </>
     );
 }

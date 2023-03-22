@@ -12,9 +12,9 @@ const SignUp = () => {
     const { state } = useLocation();
     const { addUser } = useUser();
     const [firstname, setFirstName] = useState('');
-    const [lastname, setLastname] = useState('');
+    const [lastname, setLastName] = useState('');
     const [email, setEmail] = useState('');
-    const [repectemail, setReEmail] = useState('');
+    const [repectEmail, setReEmail] = useState('');
     const [color, setColor] = useState('grey');
     const [res, setRes] = useState('');
 
@@ -28,7 +28,7 @@ const SignUp = () => {
 
     const handleLastName = (event) => {
         const value = event.target.value;
-        setLastname(value);
+        setLastName(value);
         setColor('grey');
         setRes('');
 
@@ -41,7 +41,7 @@ const SignUp = () => {
         setRes('');
     };
 
-       const handleReEmail = (event) => {
+    const handleReEmail = (event) => {
         const value = event.target.value;
         setReEmail(value);
         setColor('grey');
@@ -50,24 +50,29 @@ const SignUp = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        let newUser = {
-            first_name: firstname,
-            last_name: lastname,
-            email: email,
-            repectemail: repectemail
-        };
+        if (email === repectEmail) {
+            let newUser = {
+                first_name: firstname,
+                last_name: lastname,
+                email: email,
+            };
 
-        addUser(newUser).then((data) => {
+            addUser(newUser).then((data) => {
 
-            navigate(state?.path || "/login");
-        }).catch((err) => {
+                navigate(state?.path || "/login");
+            }).catch((err) => {
+                setColor('danger');
+                setFirstName('');
+                setLastName('');
+                setEmail('');
+                setReEmail('');
+                setRes('User already exist!')
+            });
+
+        } else {
             setColor('danger');
-            setFirstName('');
-            setEmail('');
-            setReEmail('');
-            setRes('User already exist!')
-        });
-
+            setRes('Email does not match!')
+        }
     };
 
     const handleReset = (event) => {
@@ -128,9 +133,9 @@ const SignUp = () => {
                         <Form.Label>Repeact email
                             <Form.Control>
                                 <Form.Input color={color} textColor={color}
-                                    type="password"
+                                    type="email"
                                     name="repassword"
-                                    value={repectemail}
+                                    value={repectEmail}
                                     placeholder="fisrtname@email.com"
                                     onChange={(e) => handleReEmail(e)} />
 
