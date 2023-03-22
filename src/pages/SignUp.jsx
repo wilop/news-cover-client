@@ -14,8 +14,7 @@ const SignUp = () => {
     const [firstname, setFirstName] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [repassword, setRePassword] = useState('');
+    const [repectemail, setReEmail] = useState('');
     const [color, setColor] = useState('grey');
     const [res, setRes] = useState('');
 
@@ -42,16 +41,9 @@ const SignUp = () => {
         setRes('');
     };
 
-    const handlePassword = (event) => {
+       const handleReEmail = (event) => {
         const value = event.target.value;
-        setPassword(value);
-        setColor('grey');
-        setRes('');
-    };
-
-    const handleRePassword = (event) => {
-        const value = event.target.value;
-        setRePassword(value);
+        setReEmail(value);
         setColor('grey');
         setRes('');
     };
@@ -62,8 +54,7 @@ const SignUp = () => {
             first_name: firstname,
             last_name: lastname,
             email: email,
-            password: password,
-            repassword: repassword
+            repectemail: repectemail
         };
 
         addUser(newUser).then((data) => {
@@ -73,8 +64,7 @@ const SignUp = () => {
             setColor('danger');
             setFirstName('');
             setEmail('');
-            setPassword('');
-            setRePassword('');
+            setReEmail('');
             setRes('User already exist!')
         });
 
@@ -84,7 +74,7 @@ const SignUp = () => {
         event.preventDefault();
         setColor('grey');
         setEmail('');
-        setPassword('');
+        setReEmail('');
         setRes('');
     };
 
@@ -121,7 +111,6 @@ const SignUp = () => {
                             </Form.Control>
                         </Form.Label>
                     </Form.Field>
-
                     <Form.Field>
                         <Form.Label>Email
                             <Form.Control>
@@ -135,29 +124,15 @@ const SignUp = () => {
                             </Form.Control>
                         </Form.Label>
                     </Form.Field>
-
                     <Form.Field>
-                        <Form.Label>Password
-                            <Form.Control>
-                                <Form.Input color={color} textColor={color}
-                                    type="password"
-                                    name="password"
-                                    value={password}
-                                    placeholder="*************"
-                                    onChange={(e) => handlePassword(e)} />
-                            </Form.Control>
-                        </Form.Label>
-
-                    </Form.Field>
-                    <Form.Field>
-                        <Form.Label>Repeact Password
+                        <Form.Label>Repeact email
                             <Form.Control>
                                 <Form.Input color={color} textColor={color}
                                     type="password"
                                     name="repassword"
-                                    value={repassword}
-                                    placeholder="*************"
-                                    onChange={(e) => handleRePassword(e)} />
+                                    value={repectemail}
+                                    placeholder="fisrtname@email.com"
+                                    onChange={(e) => handleReEmail(e)} />
 
                             </Form.Control>
                         </Form.Label>
