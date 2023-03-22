@@ -20,22 +20,24 @@ const NewsList = (props) => {
                     <Columns.Column key={index}>
                         <Card style={{ width: 300, margin: 'auto' }}>
                             <Heading textColor='primary' >
-                                New:{' '}{new_.id}
+                                New:{' '}{new_.title}
+                                Fecha:{' '}{new_.date}
                             </Heading>
                             <Card.Image
                                 size="4by3"
-                                src={new_.flag}
+                                src={new_.image}
                                 alt="No picture!" />
                             <Card.Content>
                                 <Media>
                                     <Media.Item>
-                                        <Heading size={4}>{new_.title}</Heading>
+                                        <p size={4}>{new_.short_description}</p>
                                         <Heading subtitle size={6}>
-                                            {new_.category}
+                                            {new_.category.name}
                                         </Heading>
                                     </Media.Item>
                                 </Media>
                             </Card.Content>
+                            
 
                         </Card>
                     </Columns.Column>
