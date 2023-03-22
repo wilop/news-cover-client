@@ -5,6 +5,7 @@ function Spinner() {
 
     return (
         <>
+        <div className='Spinner'></div>
             <img src={logo} className="Spinner-logo" alt="logo" />
             <p>Loading...</p>
         </>

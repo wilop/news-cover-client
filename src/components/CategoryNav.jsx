@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { Navbar, Heading, Media, Image } from 'react-bulma-components'
+import { Navbar } from 'react-bulma-components'
 import 'bulma/css/bulma.min.css';
 
 import useCategory from '../hooks/useCategory';
@@ -10,23 +10,21 @@ function CategoryNav(props) {
 
     const { loadCategories } = useCategory();
     const [list, setList] = useState([]);
-    const [hasChanged, setHasChanged] = useState(false);
 
     useEffect(() => {
         loadCategories()
-            .then((data) => { setList(data); console.log(data); })
+            .then((data) => { setList(data); })
             .catch((err) => {
                 setList([])
             });
 
-    }, [hasChanged]);
+    }, [list]);
 
     const select = (e, index) => {
         e.preventDefault();
         if (list.length > 0) {
             let category = list[index];
             props.handleCategoryChange(category.name);
-
         }
     };
     const allNews= (e) => {

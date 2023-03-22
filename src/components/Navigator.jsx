@@ -10,8 +10,7 @@ function Navigator() {
     const { authed, logout, user } = useAuth();
     const navigate = useNavigate();
 
-    const handleLogout = (event) => {
-        event.preventDefault();
+    const handleLogout = () => {
         logout();
         navigate("/login");
     };
@@ -25,10 +24,10 @@ function Navigator() {
                         <Navbar.Link >
                             <Media>
                                 <Media.Item >
-                                    <Heading textcolor='info' size={6}>
+                                    <Heading textColor='info' size={6}>
                                         {user.email !== '' ? 'Welcome' : ''}
                                     </Heading>
-                                    <Heading textcolor='primary' subtitle size={6}>
+                                    <Heading textColor='primary' subtitle size={6}>
                                         {user.first_name !== '' ? user.first_name : ''}
                                     </Heading>
                                 </Media.Item>
@@ -45,7 +44,7 @@ function Navigator() {
                                 <NavLink to="/categories">Categories</NavLink>
                             </Navbar.Item>}
 
-                            <Navbar.Item onClick={(e)=>handleLogout(e)}>Logout</Navbar.Item>
+                            <Navbar.Item onClick={handleLogout}>Logout</Navbar.Item>
 
                         </Navbar.Dropdown>}
                     </Navbar.Item>

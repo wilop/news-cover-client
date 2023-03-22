@@ -28,8 +28,8 @@ const useNews = () => {
                     .then((data) => {
                         if (data && data.data.length) {
                             data.data.sort((a, b) => new Date(a.date).getTime() < new Date(b.date).getTime());
-                            resolve(data.data);
                         }
+                        resolve(data.data);
                     })
                     .catch((err) => reject(err));
 
@@ -38,10 +38,6 @@ const useNews = () => {
 
     }
 
-};
-
-const prepareNews = (data) => {
-    console.log(data.sort((a, b) => new Date(a.date).getTime() > new Date(b.date).getTime()));
 };
 
 export default useNews;

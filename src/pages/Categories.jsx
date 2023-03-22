@@ -15,7 +15,7 @@ const Categories = () => {
 
     useEffect(() => {
         loadCategories()
-            .then((data) => { setList(data); console.log(data); })
+            .then((data) => { setList(data); })
             .catch((err) => {
                 console.log(err);
                 setList([])
@@ -76,8 +76,8 @@ const Categories = () => {
                                 <tr key={index}>
                                     <td> {category.name}</td>
                                     <td>
-                                        <Button text inverted color='link' onClick={() => edit(index)}>Edit</Button> |
-                                        <Button text inverted color='link' onClick={() => remove(index)}>Delete</Button>
+                                        <Button inverted color='link' onClick={() => edit(index)}>Edit</Button> |
+                                        <Button inverted color='link' onClick={() => remove(index)}>Delete</Button>
                                     </td>
                                 </tr>))}
                         </tbody>

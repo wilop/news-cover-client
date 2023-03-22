@@ -1,11 +1,11 @@
-import { useState, useEffect, createContext, useContext } from "react";
+import * as React from "react";
 
-const authContext = createContext();
+const authContext = React.createContext();
 
 function useAuth() {
-    const [authed, setAuthed] = useState(false);
-    const [token, setToken] = useState('');
-    const [user, setUser] = useState({
+    const [authed, setAuthed] = React.useState(false);
+    const [token, setToken] = React.useState('');
+    const [user, setUser] = React.useState({
         id: '',
         first_name: '',
         last_name: '',
@@ -13,7 +13,7 @@ function useAuth() {
         role: ''
     });
 
-    let [session, setSession] = useState({
+    let [session, setSession] = React.useState({
         token: '',
         id: '',
         first_name: '',
@@ -24,7 +24,7 @@ function useAuth() {
     });
 
 
-    useEffect(() => {
+    React.useEffect(() => {
         setAuthed(session.authed);
         setUser(
             {
@@ -77,6 +77,7 @@ function useAuth() {
                         authed: true
                     }
                     setSession(session);
+                    setAuthed(true);
                     resolve(session);
                 }
                 else {
@@ -100,11 +101,14 @@ function useAuth() {
                     authed: false
                 }
                 setSession(session);
+                setAuthed(false);
+                setToken('');
+                setUser({});
                 resolve();
             });
         },
     };
-}
+};
 
 export function AuthProvider({ children }) {
     const auth = useAuth();
@@ -112,5 +116,5 @@ export function AuthProvider({ children }) {
 }
 
 export default function AuthConsumer() {
-    return useContext(authContext);
-};
+    return React.useContext(authContext);
+}

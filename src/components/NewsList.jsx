@@ -30,7 +30,7 @@ const NewsList = (props) => {
                                     src={new_.image.split(' ')[3].replace('src="', '').replace('"', '')}
                                     alt="No picture!" />
                             </a>
-                            <Content>
+                            <Content size='small'>
                                 {new_.short_description.substring(0, 195).concat('[...]')}
                             </Content>
                             <Tag color='info'>

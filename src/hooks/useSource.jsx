@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import useAuth from './useAuth';
 
 const useSource = () => {
@@ -8,7 +7,7 @@ const useSource = () => {
     return {
 
         addSource: (source) => {
-            console.log('source',source);
+            console.log('source', source);
             return new Promise((resolve, reject) => {
                 let url = `/newsource`;
                 fetch(url, {
@@ -113,6 +112,7 @@ const useSource = () => {
             });
 
         },
+
         loadSources: () => {
             return new Promise((resolve, reject) => {
                 fetch(`/newsource`, {
@@ -137,10 +137,36 @@ const useSource = () => {
                             resolve(data.data);
                         }
                     })
+                    .catch((err) => {
+
+                        reject(err)
+                    }
+
+                    );
+            });
+
+        }, userHasSource: () => {
+            return new Promise((resolve, reject) => {
+                fetch(`/newsource`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+
+                    redirect: 'follow',
+                })
+                    .then((res) => {
+                        console.log(res);
+                        if (res.status === 200) {
+                            resolve(true);
+                        } else {
+                            throw new Error(res.statusText);
+                        }
+                    })
                     .catch((err) => reject(err));
             });
         }
-
 
     }
 }

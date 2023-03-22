@@ -24,8 +24,7 @@ const Login = () => {
     setPassword('');
 
     login(email, password).then((session) => {
-      let path = session.role === 'admin' ? '/categories' : '/news';
-      navigate(state?.path || path);
+      navigate(state?.path || '/news');
       setRes('Welcome!');
     }).catch(() => {
       setRes('Wrong email!');
