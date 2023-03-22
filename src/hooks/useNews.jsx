@@ -8,7 +8,7 @@ const useNews = () => {
 
         loadNews: () => {
             return new Promise((resolve, reject) => {
-                fetch(`/news/${user.id}`, {
+                fetch(`/news/`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -37,7 +37,7 @@ const useNews = () => {
 
         loadNewsByCategory: (category) => {
             return new Promise((resolve, reject) => {
-                fetch(`/news/${user.id}?category=${category._id}`, {
+                fetch(`/news/search?category=${category._id}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,

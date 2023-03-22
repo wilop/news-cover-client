@@ -16,7 +16,7 @@ const News = () => {
 
     useEffect(() => {
         loadNews()
-            .then((data) => { setList(data); console.log(data); })
+            .then((data) => {setList(data); console.log(data); })
             .catch((err) => {
                 console.log(err);
                 setList([])
