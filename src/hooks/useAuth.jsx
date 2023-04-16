@@ -62,7 +62,7 @@ function useAuth() {
 
         async login(email_, password_) {
 
-            let response = await getSession("/session", { email: email_ })
+            let response = await getSession("/session", { email: email_, password: password_ })
             let data_ = await response.json();
 
             return new Promise((resolve, reject) => {

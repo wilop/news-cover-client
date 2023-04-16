@@ -27,7 +27,7 @@ const Login = () => {
       navigate(state?.path || '/news');
       setRes('Welcome!');
     }).catch(() => {
-      setRes('Wrong email!');
+      setRes('Wrong email or password!');
       setColor('danger');
 
     });
