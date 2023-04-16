@@ -13,8 +13,11 @@ const SignUp = () => {
     const { addUser } = useUser();
     const [firstname, setFirstName] = useState('');
     const [lastname, setLastName] = useState('');
+    const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [repectEmail, setReEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [rePassword, setRePassword] = useState('');
     const [color, setColor] = useState('grey');
     const [res, setRes] = useState('');
 
@@ -34,6 +37,14 @@ const SignUp = () => {
 
     };
 
+    const handlePhone = (event) => {
+        const value = event.target.value;
+        setPhone(value);
+        setColor('grey');
+        setRes('');
+
+    };
+
     const handleEmail = (event) => {
         const value = event.target.value;
         setEmail(value);
@@ -48,24 +59,44 @@ const SignUp = () => {
         setRes('');
     };
 
+    const handlePassword = (event) => {
+        const value = event.target.value;
+        setPassword(value);
+        setColor('grey');
+        setRes('');
+    };
+
+    const handleRePassword = (event) => {
+        const value = event.target.value;
+        setRePassword(value);
+        setColor('grey');
+        setRes('');
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (email === repectEmail) {
+        if (email === repectEmail && password === rePassword) {
             let newUser = {
                 first_name: firstname,
                 last_name: lastname,
+                phone: phone,
                 email: email,
+                password: password
             };
 
             addUser(newUser).then((data) => {
 
                 navigate(state?.path || "/login");
             }).catch((err) => {
+                console.log(err)
                 setColor('danger');
                 setFirstName('');
                 setLastName('');
+                setPhone('');
                 setEmail('');
                 setReEmail('');
+                setPassword('');
+                setRePassword('');
                 setRes('User already exist!')
             });
 
@@ -78,9 +109,12 @@ const SignUp = () => {
     const handleReset = (event) => {
         event.preventDefault();
         setColor('grey');
+        setPhone('');
         setEmail('');
         setReEmail('');
         setRes('');
+        setPassword('');
+        setRePassword('');
     };
 
     return (
@@ -117,6 +151,19 @@ const SignUp = () => {
                         </Form.Label>
                     </Form.Field>
                     <Form.Field>
+                        <Form.Label>Phone number
+                            <Form.Control>
+                                <Form.Input color={color} textColor={color}
+                                    type="text"
+                                    name="phone"
+                                    value={phone}
+                                    placeholder="00000000"
+                                    onChange={(e) => handlePhone(e)} />
+
+                            </Form.Control>
+                        </Form.Label>
+                    </Form.Field>
+                    <Form.Field>
                         <Form.Label>Email
                             <Form.Control>
                                 <Form.Input color={color} textColor={color}
@@ -130,7 +177,7 @@ const SignUp = () => {
                         </Form.Label>
                     </Form.Field>
                     <Form.Field>
-                        <Form.Label>Repeact email
+                        <Form.Label>Repeat email
                             <Form.Control>
                                 <Form.Input color={color} textColor={color}
                                     type="email"
@@ -138,6 +185,32 @@ const SignUp = () => {
                                     value={repectEmail}
                                     placeholder="fisrtname@email.com"
                                     onChange={(e) => handleReEmail(e)} />
+
+                            </Form.Control>
+                        </Form.Label>
+                    </Form.Field>
+                    <Form.Field>
+                        <Form.Label>Password
+                            <Form.Control>
+                                <Form.Input color={color} textColor={color}
+                                    type="password"
+                                    name="password"
+                                    value={password}
+                                    placeholder="**********"
+                                    onChange={(e) => handlePassword(e)} />
+
+                            </Form.Control>
+                        </Form.Label>
+                    </Form.Field>
+                    <Form.Field>
+                        <Form.Label>Repeat password
+                            <Form.Control>
+                                <Form.Input color={color} textColor={color}
+                                    type="password"
+                                    name="rePassword"
+                                    value={rePassword}
+                                    placeholder="**********"
+                                    onChange={(e) => handleRePassword(e)} />
 
                             </Form.Control>
                         </Form.Label>

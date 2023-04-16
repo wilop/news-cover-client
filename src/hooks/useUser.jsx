@@ -19,6 +19,8 @@ const useUser = () => {
                         email:user_.email,
                         first_name:user_.first_name,
                         last_name:user_.last_name,
+                        phone:user_.phone,
+                        password:user_.password,
                         role:{name:'user'}
                       }),
 
