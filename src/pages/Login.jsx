@@ -40,12 +40,12 @@ const Login = () => {
     setRes('');
   };
 
-  // const handlePassword = (event) => {
-  //   const value = event.target.value;
-  //   setPassword(value);
-  //   setColor('grey');
-  //   setRes('');
-  // };
+  const handlePassword = (event) => {
+    const value = event.target.value;
+    setPassword(value);
+    setColor('grey');
+    setRes('');
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -81,8 +81,7 @@ const Login = () => {
               </Form.Control>
             </Form.Label>
           </Form.Field>
-
-          {/* <Form.Field>
+          <Form.Field>
             <Form.Label>Password
               <Form.Control>
                 <Form.Input color={color} textColor={color}
@@ -94,7 +93,7 @@ const Login = () => {
 
               </Form.Control>
             </Form.Label>
-          </Form.Field> */}
+          </Form.Field>
 
           <Form.Field kind='group'>
             <Form.Label pr={5} >Not an User?
