@@ -107,6 +107,54 @@ function useAuth() {
                 resolve();
             });
         },
+
+        async passwordlessLogin(email_) {
+            let response = await fetch('/passwordless', {
+                method: "GET",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "include", // include*, same-origin, omit
+                headers: {
+                    "Content-Type": "application/json",
+    
+                },
+                redirect: "follow",
+                referrerPolicy: "no-referrer",
+                body: JSON.stringify({email: email_}),
+            });
+
+            let data_ = await response.json();
+
+            return new Promise((resolve, reject) => {
+                if (response.status === 201) {
+                    session = {
+                        token: data_.token,
+                        id: data_.data._id,
+                        first_name: data_.data.first_name,
+                        last_name: data_.data.last_name,
+                        email: data_.data.email,
+                        role: data_.data.role.name,
+                        authed: true
+                    }
+                    setSession(session);
+                    setAuthed(true);
+                    resolve(session);
+                }
+                else {
+                    reject(Error('No se pudo'));
+                }
+            });
+
+
+        },
+
+        async getOtp(phone_) {
+            console.log(phone_);
+        },
+
+        async verifyOtp(phone_, code_) {
+            console.log(code_);
+        },
     };
 };
 
