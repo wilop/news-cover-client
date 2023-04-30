@@ -9,7 +9,7 @@ import useAuth from '../hooks/useAuth';
 const Login = () => {
 
   const navigate = useNavigate();
-  const { login, passwordlessLogin, getOtp, verifyOtp } = useAuth();
+  const { login, sendLoginEmail, getOtp, verifyOtp } = useAuth();
   const { state } = useLocation();
 
   const [email, setEmail] = useState('');
@@ -38,13 +38,13 @@ const Login = () => {
     });
   };
 
-  const passwordlessLogin_ = () => {
+  const sendLoginEmail_ = () => {
 
     setEmail('');
     setPassword('');
     setOtp('');
 
-    passwordlessLogin(email).then((session) => {
+    sendLoginEmail(email).then(() => {
       navigate(state?.path || '/news');
       setRes('Welcome!');
     }).catch(() => {
@@ -60,7 +60,7 @@ const Login = () => {
     setPassword('');
     setOtp('');
 
-    getOtp(email).then((session) => {
+    getOtp(email).then(() => {
       navigate(state?.path || '/news');
       setRes('Welcome!');
     }).catch(() => {
@@ -84,7 +84,7 @@ const Login = () => {
       setColor('danger');
 
     });
-  }
+  };
 
   const handleEmail = (event) => {
     const value = event.target.value;
@@ -133,7 +133,7 @@ const Login = () => {
 
   const submitEmail=(event)=>{
     event.preventDefault();
-    passwordlessLogin_()
+    sendLoginEmail_()
     setRes('');
   };
 
@@ -143,7 +143,7 @@ const Login = () => {
       getOtp_();
       setOtpButton('Verify OTP');
     }else{
-      verifyOtp(otp);
+      verifyOtp_();
       setOtpButton('Get OTP');
 
     }

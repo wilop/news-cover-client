@@ -66,9 +66,9 @@ const News = () => {
     };
 
     const handleFilter = (e) => {
+        e.preventDefault();
         const value = e.target.value;
-        e.target.
-            setQuery('keyword');
+        setQuery('keyword');
         setFilter(value);
         setParam(value);
         populateTags();

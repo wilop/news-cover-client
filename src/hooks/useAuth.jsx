@@ -108,7 +108,7 @@ function useAuth() {
             });
         },
 
-        async passwordlessLogin(email_) {
+        async sendLoginEmail(email_) {
             let response = await fetch('/passwordless', {
                 method: "GET",
                 mode: "cors",
@@ -116,17 +116,44 @@ function useAuth() {
                 credentials: "include", // include*, same-origin, omit
                 headers: {
                     "Content-Type": "application/json",
-    
+
                 },
                 redirect: "follow",
                 referrerPolicy: "no-referrer",
-                body: JSON.stringify({email: email_}),
+                body: JSON.stringify({ email: email_ }),
+            });
+            return new Promise((resolve, reject) => {
+                console.log(response);
+                if (response.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    reject(Error('No se pudo'));
+                }
+            });
+
+
+        },
+
+        async verifyEmailToken(token_) {
+            let response = await fetch(`/passwordless/${token_}`, {
+                method: "POST",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "include", // include*, same-origin, omit
+                headers: {
+                    "Content-Type": "application/json",
+
+                },
+                redirect: "follow",
+                referrerPolicy: "no-referrer",
+                body: JSON.stringify({ token: token_ }),
             });
 
             let data_ = await response.json();
 
             return new Promise((resolve, reject) => {
-                if (response.status === 201) {
+                if (response.status === 200) {
                     session = {
                         token: data_.token,
                         id: data_.data._id,
@@ -145,15 +172,76 @@ function useAuth() {
                 }
             });
 
-
         },
 
         async getOtp(phone_) {
-            console.log(phone_);
+            let response = await fetch('/session/otp', {
+                method: "GET",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "include", // include*, same-origin, omit
+                headers: {
+                    "Content-Type": "application/json",
+
+                },
+                redirect: "follow",
+                referrerPolicy: "no-referrer",
+                body: JSON.stringify({ phone: phone_ }),
+            });
+
+            let data_ = await response.json();
+
+            return new Promise((resolve, reject) => {
+                if (response.status === 201) {
+
+                    resolve(true);
+                }
+                else {
+                    reject(Error('No se pudo'));
+                }
+            });
         },
 
         async verifyOtp(phone_, code_) {
-            console.log(code_);
+            let response = await fetch('/session/verify', {
+                method: "GET",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "include", // include*, same-origin, omit
+                headers: {
+                    "Content-Type": "application/json",
+
+                },
+                redirect: "follow",
+                referrerPolicy: "no-referrer",
+                body: JSON.stringify(
+                    {
+                        phone: phone_,
+                        code: code_
+                    }),
+            });
+
+            let data_ = await response.json();
+
+            return new Promise((resolve, reject) => {
+                if (response.status === 200) {
+                    session = {
+                        token: data_.token,
+                        id: data_.data._id,
+                        first_name: data_.data.first_name,
+                        last_name: data_.data.last_name,
+                        email: data_.data.email,
+                        role: data_.data.role.name,
+                        authed: true
+                    }
+                    setSession(session);
+                    setAuthed(true);
+                    resolve(session);
+                }
+                else {
+                    reject(Error('No se pudo'));
+                }
+            });
         },
     };
 };

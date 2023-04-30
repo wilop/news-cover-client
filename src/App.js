@@ -7,6 +7,7 @@ import Sources from './pages/Sources'
 import Source from './pages/Source';
 import Categories from './pages/Categories';
 import Category from './pages/Category';
+import Passwordless from './pages/PasswordlessLogin';
 import NoPage from './pages/NoPage';
 
 import Footer from './components/Footer';
@@ -22,6 +23,7 @@ function App() {
         <Navigator />
         <Routes>
           <Route index path='/login' element={<Login />} />
+          <Route path='/passwordless' element={<Passwordless />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='*' element={<NoPage />} />
           <Route index path='/' element={<RequireAuth><News/></RequireAuth>} />
