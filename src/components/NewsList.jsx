@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { Image, Notification, Heading, Columns, Tag, Content, Button } from 'react-bulma-components'
+import { Image, Notification, Heading, Columns, Tag, Content } from 'react-bulma-components'
 import 'bulma/css/bulma.min.css';
 
 const NewsList = (props) => {
@@ -17,8 +17,8 @@ const NewsList = (props) => {
             {news.length && (<Columns size='half'>
                 {news.map((new_, index) => (
                     <Columns.Column size={4} key={index} >
-                        <Notification color='info' light style={{height: 600}}>
-                            <Tag color='info'>{'Date:'} {new_.date.replace('T', ' Hour: ').replace('000Z', '')}</Tag>
+                        <Notification color='info' light style={{ height: 600 }}>
+                            <Tag color='info'>{'Date:'} {new Date(new_.date).toLocaleString('es-CR')}</Tag>
                             <a href={new_.permalink} target='_blank' style={{ textDecoration: 'none' }} >
                                 <Heading subtitle >
                                     {new_.title}
@@ -36,6 +36,13 @@ const NewsList = (props) => {
                             <Tag color='info'>
                                 {new_.category.name}
                             </Tag>
+                            <Content size='small'>
+                                {new_.tags.length && new_.tags.map((tag, tag_index) => (
+                                    <Tag mr ='1' color='warning' key={tag_index}>
+                                        {tag}
+                                    </Tag>
+                                ))}
+                            </Content>
                             <Content>
                                 <a href={new_.permalink} target='_blank'>
                                     See more...
