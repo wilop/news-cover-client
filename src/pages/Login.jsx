@@ -15,11 +15,12 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
+  const [phone, setPhone] = useState('');
   const [color, setColor] = useState('grey');
   const [passwordTab, setPasswordTab] = useState(true);
-  const [otpTab, setOtpTab] = useState(false);
+  const [phoneTab, setPhoneTab] = useState(false);
+  const [codeTab, setCodeTab] = useState(false);
   const [passwordlessTab, setPassworldlessTab] = useState(false);
-  const [otpButton, setOtpButton] = useState('Get OTP');
 
   const [res, setRes] = useState('');
 
@@ -29,8 +30,11 @@ const Login = () => {
     setPassword('');
 
     login(email, password).then((session) => {
-      navigate(state?.path || '/news');
-      setRes('Welcome!');
+      setPasswordTab(false);
+      setPassworldlessTab(false);
+      setPhoneTab(true);
+      // navigate(state?.path || '/news');
+      // setRes('Welcome!');
     }).catch(() => {
       setRes('Wrong email or password!');
       setColor('danger');
@@ -59,12 +63,13 @@ const Login = () => {
     setEmail('');
     setPassword('');
     setOtp('');
-
-    getOtp(email).then(() => {
-      navigate(state?.path || '/news');
-      setRes('Welcome!');
+    setPasswordTab(false);
+    setPassworldlessTab(false);
+    setPhoneTab(false);
+    setCodeTab(true);
+    getOtp(phone).then(() => {
     }).catch(() => {
-      setRes('Wrong telephone or code expired!');
+      setRes('Wrong telephone');
       setColor('danger');
 
     });
@@ -76,7 +81,7 @@ const Login = () => {
     setPassword('');
     setOtp('');
 
-    verifyOtp(email).then((session) => {
+    verifyOtp(phone, otp).then((session) => {
       navigate(state?.path || '/news');
       setRes('Welcome!');
     }).catch(() => {
@@ -89,6 +94,13 @@ const Login = () => {
   const handleEmail = (event) => {
     const value = event.target.value;
     setEmail(value);
+    setColor('grey');
+    setRes('');
+  };
+
+  const handlePhone = (event) => {
+    const value = event.target.value;
+    setPhone(value);
     setColor('grey');
     setRes('');
   };
@@ -110,19 +122,22 @@ const Login = () => {
   const handlePasswordTab = () => {
     setPasswordTab(true);
     setPassworldlessTab(false);
-    setOtpTab(false);
+    setPhoneTab(false);
+    setCodeTab(false);
   };
 
-  const handleOtpTab = () => {
+  const handlePhoneTab = () => {
     setPasswordTab(false);
     setPassworldlessTab(false);
-    setOtpTab(true);
+    setPhoneTab(true);
+    setCodeTab(false);
   };
 
   const handlePasswordlessTab = () => {
     setPasswordTab(false);
     setPassworldlessTab(true);
-    setOtpTab(false);
+    setPhoneTab(false);
+    setCodeTab(false);
   };
 
   const handleSubmit = (event) => {
@@ -131,22 +146,21 @@ const Login = () => {
     setRes('');
   };
 
-  const submitEmail=(event)=>{
+  const submitEmail = (event) => {
     event.preventDefault();
     sendLoginEmail_()
     setRes('');
   };
 
-  const submitOtp=(event)=>{
+  const submitPhone = (event) => {
     event.preventDefault();
-    if (otpButton=== 'Get OTP') {
-      getOtp_();
-      setOtpButton('Verify OTP');
-    }else{
-      verifyOtp_();
-      setOtpButton('Get OTP');
+    getOtp_();
+    setRes('');
+  };
 
-    }
+  const submitOtp = (event) => {
+    event.preventDefault();
+    verifyOtp_();
     setRes('');
   };
 
@@ -177,15 +191,14 @@ const Login = () => {
               <Panel.Tabs.Tab active={passwordTab} onClick={handlePasswordTab}>
                 Password
               </Panel.Tabs.Tab >
-              <Panel.Tabs.Tab active={otpTab} onClick={handleOtpTab}>
+              <Panel.Tabs.Tab active={phoneTab} onClick={handlePhoneTab} display='hidden'>
                 OTP Code
               </Panel.Tabs.Tab>
               <Panel.Tabs.Tab active={passwordlessTab} onClick={handlePasswordlessTab}>
                 Passwordless
               </Panel.Tabs.Tab>
             </Panel.Tabs>
-
-            <Panel.Block>
+            <Panel.Block invisible={!passwordTab} display={!passwordTab ? 'hidden' : 'block'}>
               <Form.Field>
                 <Form.Label>Email
                   <Form.Control>
@@ -199,9 +212,6 @@ const Login = () => {
                   </Form.Control>
                 </Form.Label>
               </Form.Field>
-            </Panel.Block>
-
-            <Panel.Block invisible={!passwordTab} display={!passwordTab ? 'hidden' : 'flex'}>
               <Form.Field>
                 <Form.Label>Password
                   <Form.Control>
@@ -220,7 +230,25 @@ const Login = () => {
               </Form.Field>
             </Panel.Block>
 
-            <Panel.Block invisible={!otpTab} display={!otpTab ? 'hidden' : 'flex'}>
+            <Panel.Block invisible={!phoneTab} display={!phoneTab ? 'hidden' : 'block'}>
+              <Form.Field>
+                <Form.Label>Phone
+                  <Form.Control>
+                    <Form.Input color={color} textColor={color}
+                      type="text"
+                      name="phone"
+                      value={phone}
+                      placeholder="506XXXXXXXX"
+                      onChange={(e) => handlePhone(e)} />
+
+                  </Form.Control>
+                </Form.Label>
+                <Form.Control>
+                  <Button value="get_code" color="dark" type="button" onClick={(e) => submitPhone(e)}>Get Code</Button>
+                </Form.Control>
+              </Form.Field>
+            </Panel.Block>
+            <Panel.Block invisible={!codeTab} display={!codeTab ? 'hidden' : 'block'}>
               <Form.Field>
                 <Form.Label>OTP Code
                   <Form.Control>
@@ -234,18 +262,27 @@ const Login = () => {
                   </Form.Control>
                 </Form.Label>
                 <Form.Control>
-                  <Button value="otp" color="dark" type="button" onClick={(e)=>submitOtp(e)}>Get Code</Button>
+                  <Button value="verify_otp" color="dark" type="button" onClick={(e) => submitOtp(e)}>Verify</Button>
                 </Form.Control>
               </Form.Field>
             </Panel.Block>
 
-            <Panel.Block invisible={!passwordlessTab} display={!passwordlessTab ? 'hidden' : 'flex'}  >
+            <Panel.Block invisible={!passwordlessTab} display={!passwordlessTab ? 'hidden' : 'block'}  >
               <Form.Field>
-                <Form.Label>Passwordless
+                <Form.Label>Email
                   <Form.Control>
-                    <Button value="passwordless" color="dark" type="button" onClick={(e)=>submitEmail(e)}>Send an email</Button>
+                    <Form.Input color={color} textColor={color}
+                      type="text"
+                      name="email2"
+                      value={email}
+                      placeholder="username@email.com"
+                      onChange={(e) => handleEmail(e)} />
+
                   </Form.Control>
                 </Form.Label>
+                <Form.Control>
+                  <Button value="passwordless" color="dark" type="button" onClick={(e) => submitEmail(e)}>Send an email</Button>
+                </Form.Control>
               </Form.Field>
             </Panel.Block>
 

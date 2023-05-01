@@ -15,15 +15,16 @@ const PasswordlessLoginCallback = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const getTokenFromURL = () => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(urlSearchParams.entries());
-    const loginToken = params.token;
-    return loginToken;
+    let params = new URLSearchParams(document.location.search);
+    let token = params.get("pwd");
+    let email = params.get("email");
+    console.log(email, token);
+    return {token, email};
   };
 
   useEffect(() => {
-    const token = getTokenFromURL();
-    verifyEmailToken(token)
+    const session = getTokenFromURL();
+    verifyEmailToken(session.token, session.email)
       .then(() => {
         setIsLoggedIn(true)
         navigate('/news');
@@ -42,7 +43,7 @@ const PasswordlessLoginCallback = () => {
   return (
 
     <>
-      <Header title="Page Not Found" />
+      <Header title="Passwordless Verification" />
 
       <Hero color='warning' >
         <Hero.Body >

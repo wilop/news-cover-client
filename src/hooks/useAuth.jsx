@@ -9,6 +9,7 @@ function useAuth() {
         id: '',
         first_name: '',
         last_name: '',
+        phone: '',
         email: '',
         role: ''
     });
@@ -18,6 +19,7 @@ function useAuth() {
         id: '',
         first_name: '',
         last_name: '',
+        phone: '',
         email: '',
         role: '',
         authed: false
@@ -31,6 +33,7 @@ function useAuth() {
                 id: session.id,
                 first_name: session.first_name,
                 last_name: session.last_name,
+                phone: session.phone,
                 email: session.email,
                 role: session.role
             }
@@ -72,6 +75,7 @@ function useAuth() {
                         id: data_.data._id,
                         first_name: data_.data.first_name,
                         last_name: data_.data.last_name,
+                        phone: data_.data.phone,
                         email: data_.data.email,
                         role: data_.data.role.name,
                         authed: true
@@ -109,7 +113,7 @@ function useAuth() {
         },
 
         async sendLoginEmail(email_) {
-            let response = await fetch('/passwordless', {
+            let response = await fetch(`/passwordless?${email_}`, {
                 method: "GET",
                 mode: "cors",
                 cache: "no-cache",
@@ -120,7 +124,6 @@ function useAuth() {
                 },
                 redirect: "follow",
                 referrerPolicy: "no-referrer",
-                body: JSON.stringify({ email: email_ }),
             });
             return new Promise((resolve, reject) => {
                 console.log(response);
@@ -135,8 +138,8 @@ function useAuth() {
 
         },
 
-        async verifyEmailToken(token_) {
-            let response = await fetch(`/passwordless/${token_}`, {
+        async verifyEmailToken(email_, token_) {
+            let response = await fetch(`/passwordless?email=${email_}&pwd=${token_}`, {
                 method: "POST",
                 mode: "cors",
                 cache: "no-cache",
@@ -159,6 +162,7 @@ function useAuth() {
                         id: data_.data._id,
                         first_name: data_.data.first_name,
                         last_name: data_.data.last_name,
+                        phone: data_.data.phone,
                         email: data_.data.email,
                         role: data_.data.role.name,
                         authed: true
@@ -175,7 +179,7 @@ function useAuth() {
         },
 
         async getOtp(phone_) {
-            let response = await fetch('/session/otp', {
+            let response = await fetch(`/session/otp?phone=${phone_}`, {
                 method: "GET",
                 mode: "cors",
                 cache: "no-cache",
@@ -186,13 +190,12 @@ function useAuth() {
                 },
                 redirect: "follow",
                 referrerPolicy: "no-referrer",
-                body: JSON.stringify({ phone: phone_ }),
             });
-
-            let data_ = await response.json();
+            console.log(response);;
+            // let data_ = await response.json();
 
             return new Promise((resolve, reject) => {
-                if (response.status === 201) {
+                if (response.status === 200) {
 
                     resolve(true);
                 }
@@ -203,7 +206,7 @@ function useAuth() {
         },
 
         async verifyOtp(phone_, code_) {
-            let response = await fetch('/session/verify', {
+            let response = await fetch(`/session/verify?phone=${phone_}&code=${code_}`, {
                 method: "GET",
                 mode: "cors",
                 cache: "no-cache",
@@ -214,31 +217,33 @@ function useAuth() {
                 },
                 redirect: "follow",
                 referrerPolicy: "no-referrer",
-                body: JSON.stringify(
-                    {
-                        phone: phone_,
-                        code: code_
-                    }),
+
             });
 
             let data_ = await response.json();
 
             return new Promise((resolve, reject) => {
                 if (response.status === 200) {
-                    session = {
-                        token: data_.token,
-                        id: data_.data._id,
-                        first_name: data_.data.first_name,
-                        last_name: data_.data.last_name,
-                        email: data_.data.email,
-                        role: data_.data.role.name,
-                        authed: true
-                    }
+                    // session = {
+                    //     token: data_.token,
+                    //     id: data_.data._id,
+                    //     first_name: data_.data.first_name,
+                    //     last_name: data_.data.last_name,
+                    //     email: data_.data.email,
+                    //     role: data_.data.role.name,
+                    //     authed: true
+                    // }
+                    console.log(response);
                     setSession(session);
                     setAuthed(true);
                     resolve(session);
                 }
                 else {
+                    setSession(session);
+                    setAuthed(false);
+                    setToken('');
+                    setUser({});
+                    resolve();
                     reject(Error('No se pudo'));
                 }
             });
