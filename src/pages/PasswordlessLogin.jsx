@@ -18,18 +18,20 @@ const PasswordlessLoginCallback = () => {
     let params = new URLSearchParams(document.location.search);
     let token = params.get("pwd");
     let email = params.get("email");
-    console.log(email, token);
+    //console.log(email, token);
     return {token, email};
   };
 
   useEffect(() => {
     const session = getTokenFromURL();
-    verifyEmailToken(session.token, session.email)
+    console.log(session)
+    verifyEmailToken(session.email, session.token)
       .then(() => {
         setIsLoggedIn(true)
         navigate('/news');
       })
       .catch((error) => {
+        console.log(error)
       })
       .finally(() => {
         setLoading(false);

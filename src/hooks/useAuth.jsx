@@ -113,7 +113,7 @@ function useAuth() {
         },
 
         async sendLoginEmail(email_) {
-            let response = await fetch(`/passwordless?${email_}`, {
+            let response = await fetch(`/passwordless?email=${email_}`, {
                 method: "GET",
                 mode: "cors",
                 cache: "no-cache",
@@ -156,7 +156,7 @@ function useAuth() {
             let data_ = await response.json();
 
             return new Promise((resolve, reject) => {
-                if (response.status === 200) {
+                if (response.status === 201) {
                     session = {
                         token: data_.token,
                         id: data_.data._id,
